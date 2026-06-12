@@ -1,7 +1,8 @@
 #include "cfe_types.h"
-#include "printf.h"
 #include "cfe_string.h"
 #include "cfe_api.h"
+#include "printf.h"
+#include <stdarg.h>
 
 int conhandle;
 
@@ -48,6 +49,15 @@ static int console_xprint(const char *str)
     return count;
 }
 
+static void print(const char *str, ...) {
+    va_list va;
+    va_start(va, str);
+    char buf[1024] = { 0 };
+    npf_snprintf(buf, sizeof(buf), str, va);
+    console_xprint(buf);
+    va_end(va);
+}
+
 void appletmain(unsigned long handle,
                 unsigned long ept,
                 unsigned long reserved,
@@ -63,18 +73,10 @@ void appletmain(unsigned long handle,
     str[0] = 0;
     cfe_getenv("BOOT_CONSOLE",str,sizeof(str));
 
-    char buf[1024];
-    npf_snprintf(buf, sizeof(buf), "Hello, world.  Console = %s\n",str);
-    console_xprint(buf);
-
-    npf_snprintf(buf, sizeof(buf), "API Seal = %08X\n",(int)seal);
-    console_xprint(buf);
-
-    npf_snprintf(buf, sizeof(buf), "Entrypoint=%08X  Handle=%08X\n",(int)ept,(int)handle);
-    console_xprint(buf);
-
-    npf_snprintf(buf, sizeof(buf), "Exiting to CFE\n\n");
-    console_xprint(buf);
+    print("Hello, world.  Console = %s\n",str);
+    print("API Seal = %08X\n",(int)seal);
+    print("Entrypoint=%08X  Handle=%08X\n",(int)ept,(int)handle);
+    print("Exiting to CFE\n\n");
 
     cfe_exit(CFE_FLG_WARMSTART,0);
 
