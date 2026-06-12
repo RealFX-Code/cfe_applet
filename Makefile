@@ -33,13 +33,13 @@ OBJECTS = $(patsubst %.c, %.o, $(SRCFILES))
 
 .PHONY: all clean $(TARGET_BIN)
 
-$(TARGET_ELF): $(OBJECTS) | linker.ld
-	@echo " [LD] $(TARGET_ELF)"
-	@$(LD) -o $@ $(LDFLAGS) $(OBJECTS) 
-
 $(TARGET_BIN): $(TARGET_ELF)
 	@echo " [OBJCPY] $(TARGET_BIN)"
 	@$(OBJCOPY) -O binary $(TARGET_ELF) $(TARGET_BIN)
+
+$(TARGET_ELF): $(OBJECTS) | linker.ld
+	@echo " [LD] $(TARGET_ELF)"
+	@$(LD) -o $@ $(LDFLAGS) $(OBJECTS)
 
 %.o: %.c
 	@echo " [CC] $<"
