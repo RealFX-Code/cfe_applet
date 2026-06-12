@@ -61,3 +61,6 @@ install: $(TARGET_BIN) $(TARGET_ELF)
 
 clean:
 	@rm -rf $(TARGET_ELF) $(TARGET_BIN) $(OBJECTS)
+	@echo "+------------------------------------------------------+"
+	@echo "| There may still be installed files in $(INSTALLDIR)!     |"
+	@echo "+------------------------------------------------------+"
