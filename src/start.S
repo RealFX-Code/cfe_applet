@@ -1,7 +1,7 @@
 /*  *********************************************************************
     *  Broadcom Common Firmware Environment (CFE)
     *
-    *  Mini startup module for CFE apps      File: minicrt0.S
+    *  Mini startup module for CFE apps      Original File: minicrt0.S
     *
     *  ARM port for BCM47081 (Cortex-A7)
     *  Original MIPS version by Mitch Lichtenberg (mpl@broadcom.com)
@@ -24,7 +24,7 @@ __start:
          * ARM has no GP register, so skip that.
          * Leave 8 bytes at top for ABI alignment.
          */
-        ldr     sp, =stack_bottom + STACK_SIZE - 8
+        ldr     sp, =(stack_bottom + STACK_SIZE - 8)
 
         /*
          * Zero BSS, 4 bytes at a time.

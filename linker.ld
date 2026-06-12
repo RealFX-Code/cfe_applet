@@ -1,5 +1,5 @@
 OUTPUT_ARCH(arm)
-ENTRY(appletmain)
+ENTRY(__start)
 SECTIONS
 {
   . = 0x20000000;

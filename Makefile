@@ -14,6 +14,7 @@ LDFLAGS = -T linker.ld -nodefaultlibs -nostdlib -Wl,--build-id=none,--no-warn-rw
 
 
 SRCFILES = \
+	src/start.S \
 	src/main.c \
 	src/printf.c \
 	src/cfe_api.c \
@@ -25,7 +26,8 @@ TARGET_BIN = $(OUTPUT).bin
 
 INSTALLDIR = /srv/tftp
 
-OBJECTS = $(patsubst %.c, %.o, $(SRCFILES))
+OBJECTS = 	$(patsubst %.S,%.o,$(filter %.S,$(SRCFILES))) \
+			$(patsubst %.c,%.o,$(filter %.c,$(SRCFILES)))
 
 #
 #   Begin compile
@@ -42,6 +44,10 @@ $(TARGET_ELF): $(OBJECTS) | linker.ld
 	@$(LD) -o $@ $(LDFLAGS) $(OBJECTS)
 
 %.o: %.c
+	@echo " [CC] $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+%.o: %.S
 	@echo " [CC] $<"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
