@@ -23,6 +23,8 @@ OUTPUT = output
 TARGET_ELF = $(OUTPUT).elf
 TARGET_BIN = $(OUTPUT).bin
 
+INSTALLDIR = /srv/tftp
+
 OBJECTS = $(patsubst %.c, %.o, $(SRCFILES))
 
 #
@@ -44,6 +46,18 @@ $(TARGET_BIN): $(TARGET_ELF)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(TARGET_ELF) $(TARGET_BIN)
+
+install: $(TARGET_BIN) $(TARGET_ELF)
+	@echo " [MKDIR] $(INSTALLDIR)"
+	@mkdir -p "$(INSTALLDIR)"
+
+	@echo " [INSTALL] $(INSTALLDIR)/$(TARGET_ELF)"
+	@rm -f $(INSTALLDIR)/$(TARGET_ELF)
+	@cp $(TARGET_ELF) $(INSTALLDIR)/$(TARGET_ELF)
+
+	@echo " [INSTALL] $(INSTALLDIR)/$(TARGET_BIN)"
+	@rm -f $(INSTALLDIR)/$(TARGET_BIN)
+	@cp $(TARGET_BIN) $(INSTALLDIR)/$(TARGET_BIN)
 
 clean:
 	@rm -rf $(TARGET_ELF) $(TARGET_BIN) $(OBJECTS)
