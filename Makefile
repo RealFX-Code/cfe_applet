@@ -23,6 +23,7 @@ SRCFILES = \
 OUTPUT = output
 TARGET_ELF = $(OUTPUT).elf
 TARGET_BIN = $(OUTPUT).bin
+TARGET_SREC = $(OUTPUT).srec
 
 INSTALLDIR = /srv/tftp
 
@@ -39,6 +40,10 @@ $(TARGET_BIN): $(TARGET_ELF)
 	@echo " [OBJCPY] $(TARGET_BIN)"
 	@$(OBJCOPY) -O binary $(TARGET_ELF) $(TARGET_BIN)
 
+$(TARGET_SREC): $(TARGET_ELF)
+	@echo " [SREC] $(TARGET_SREC)"
+	@$(OBJCOPY) -O srec $(TARGET_ELF) $(TARGET_SREC)
+
 $(TARGET_ELF): $(OBJECTS) | linker.ld
 	@echo " [LD] $(TARGET_ELF)"
 	@$(LD) -o $@ $(LDFLAGS) $(OBJECTS)
@@ -51,9 +56,9 @@ $(TARGET_ELF): $(OBJECTS) | linker.ld
 	@echo " [CC] $<"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-all: $(TARGET_ELF) $(TARGET_BIN)
+all: $(TARGET_ELF) $(TARGET_BIN) $(TARGET_SREC)
 
-install: $(TARGET_BIN) $(TARGET_ELF)
+install: $(TARGET_BIN) $(TARGET_ELF) $(TARGET_SREC)
 	@echo " [MKDIR] $(INSTALLDIR)"
 	@mkdir -p "$(INSTALLDIR)"
 
@@ -65,8 +70,12 @@ install: $(TARGET_BIN) $(TARGET_ELF)
 	@rm -f $(INSTALLDIR)/$(TARGET_BIN)
 	@cp $(TARGET_BIN) $(INSTALLDIR)/$(TARGET_BIN)
 
+	@echo " [INSTALL] $(INSTALLDIR)/$(TARGET_SREC)"
+	@rm -f $(INSTALLDIR)/$(TARGET_SREC)
+	@cp $(TARGET_SREC) $(INSTALLDIR)/$(TARGET_SREC)
+
 clean:
-	@rm -rf $(TARGET_ELF) $(TARGET_BIN) $(OBJECTS)
+	@rm -rf $(TARGET_ELF) $(TARGET_BIN) $(TARGET_SREC) $(OBJECTS)
 	@echo "+------------------------------------------------------+"
 	@echo "| There may still be installed files in $(INSTALLDIR)!     |"
 	@echo "+------------------------------------------------------+"
