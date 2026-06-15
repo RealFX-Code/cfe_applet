@@ -2,10 +2,11 @@ OUTPUT_ARCH(arm)
 ENTRY(__start)
 SECTIONS
 {
-  . = 0x20000000;
+  . = 0x00008000;
 
   .text :
   {
+    *(.text.header)
     _ftext = .;
     *(.init)
     eprol = .;

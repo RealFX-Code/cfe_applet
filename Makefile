@@ -14,6 +14,7 @@ LDFLAGS = -T linker.ld -nodefaultlibs -nostdlib -Wl,--build-id=none,--no-warn-rw
 
 
 SRCFILES = \
+	src/header.S \
 	src/start.S \
 	src/main.c \
 	src/printf.c \
